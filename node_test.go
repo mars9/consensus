@@ -24,11 +24,8 @@ func TestShutdownSend(t *testing.T) {
 	n.Cancel()
 
 	ctx := context.Background()
-	if err := n.Send(ctx, nil); err != errNodeShutdown {
-		t.Fatalf("Send: expected errNodeShutdown error, got %T", err)
-	}
-	if err := n.send(nil); err != errNodeShutdown {
-		t.Fatalf("send: expected errNodeShutdown error, got %T", err)
+	if err := n.Send(ctx, nil); err != ErrNodeShutdown {
+		t.Fatalf("Send: expected ErrNodeShutdown error, got %T", err)
 	}
 }
 
@@ -52,35 +49,5 @@ func TestCancel(t *testing.T) {
 	case <-n.Done():
 	default:
 		t.Fatalf("done channel is not closed")
-	}
-}
-
-func TestBootstrap(t *testing.T) {
-	t.Parallel()
-
-	done := make(chan struct{})
-	N := 10
-	var res []*Message
-	n := Bootstrap(42)
-
-	go func() {
-		defer close(done)
-		for {
-			select {
-			case m := <-n.Recv():
-				res = append(res, m)
-			case <-n.Done():
-				return
-			}
-		}
-	}()
-
-	for i := 0; i < N; i++ {
-		n.send(&Message{Type: MessageType(i)})
-	}
-	n.Cancel()
-	<-done
-	if len(res) != N {
-		t.Fatalf("expected %d messages, got %d", N, len(res))
 	}
 }

@@ -1,0 +1,29 @@
+syntax = "proto3";
+package pb;
+option go_package = "pb";
+
+message VoteRequest {
+	uint64      from      = 1;
+	uint64      to        = 2;
+	uint64      term      = 3;
+}
+
+message VoteResponse {
+	uint64      from      = 1;
+	uint64      to        = 2;
+	uint64      term      = 3;
+	bool        success   = 4;
+}
+
+message HeartbeatRequest {
+	uint64      from      = 1;
+	uint64      to        = 2;
+	uint64      term      = 3;
+}
+
+message HeartbeatResponse {
+	uint64      from      = 1;
+	uint64      to        = 2;
+	uint64      term      = 3;
+	bool        success   = 4;
+}
